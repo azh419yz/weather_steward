@@ -1,0 +1,23 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/logs/logs",
+    "pages/city/city"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "AI天气管家",
+    "navigationBarBackgroundColor": "#ffffff"
+  },
+  "style": "v2",
+  "componentFramework": "glass-easel",
+  "lazyCodeLoading": "requiredComponents",
+  "usingComponents": {
+    "ant-icon": "miniprogram_npm/antd-mini/Icon/index",
+    "ant-button": "miniprogram_npm/antd-mini/Button/index",
+    "ant-card": "miniprogram_npm/antd-mini/Card/index",
+    "ant-container": "miniprogram_npm/antd-mini/Container/index",
+    "ant-popup": "miniprogram_npm/antd-mini/Popup/index",
+    "ant-tabs": "miniprogram_npm/antd-mini/Tabs/index"
+  }
+}

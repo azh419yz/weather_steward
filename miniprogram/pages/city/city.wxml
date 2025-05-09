@@ -1,0 +1,47 @@
+<!--城市选择页面-->
+<view class="city-container">
+  <view class="city-header">
+    <view class="back-icon" bindtap="goBack">
+      <ant-icon type="left" className="icon-back" />
+    </view>
+    <view class="header-title">选择城市</view>
+  </view>
+  
+  <view class="city-content">
+    <!-- 当前选择的城市 -->
+    <view class="selected-city" wx:if="{{selectedCity}}">
+      <view class="city-label">当前城市</view>
+      <view class="city-value">{{selectedCity}}</view>
+    </view>
+    
+    <!-- 最近使用的城市 -->
+    <view class="recent-cities" wx:if="{{recentCities.length > 0}}">
+      <view class="recent-title">最近使用</view>
+      <view class="recent-list">
+        <view class="recent-item" 
+              wx:for="{{recentCities}}" 
+              wx:key="*this" 
+              bindtap="selectRecentCity"
+              data-city="{{item}}">
+          {{item}}
+        </view>
+      </view>
+    </view>
+    
+    <!-- 选择城市按钮 -->
+    <view class="select-section">
+      <view class="select-tip">选择其他城市</view>
+      <ant-button type="primary" size="large" onTap="openCascader">选择城市</ant-button>
+    </view>
+  </view>
+  
+  <!-- 城市选择级联组件 -->
+  <ant-cascader
+    visible="{{visible}}"
+    title="选择城市"
+    options="{{provinces}}"
+    placeholder="请选择城市"
+    onClose="closeCascader"
+    onChange="onCityChange"
+  />
+</view>
