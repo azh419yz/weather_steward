@@ -1,9 +1,4 @@
 {
-  "component": true,
   "usingComponents": {
-    "ant-icon": "miniprogram_npm/antd-mini/Icon/index",
-    "ant-button": "miniprogram_npm/antd-mini/Button/index",
-    "ant-card": "miniprogram_npm/antd-mini/Card/index",
-    "ant-container": "miniprogram_npm/antd-mini/Container/index"
   }
 }

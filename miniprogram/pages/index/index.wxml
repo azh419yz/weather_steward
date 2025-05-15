@@ -1,53 +1,145 @@
 <!--index.wxml-->
-<view class="weather-container">
-  <!-- 下拉刷新组件 -->
-  <ant-container refresher-enabled refresher-triggered="{{refreshing}}" bind:refresherpulling="onPulling" bind:refresherrefresh="onRefresh">
-    <!-- 顶部城市栏 -->
-    <view class="city-bar" bindtap="openCitySelector">
-      <view class="city-name">{{currentCity}}</view>
-      <ant-icon type="location" className="location-icon" />
+<view class="container">
+  <!-- 加载状态 -->
+  <view class="loading" wx:if="{{loading}}">
+    <view class="loading-icon"></view>
+    <text>加载中...</text>
+  </view>
+
+  <!-- 错误状态 -->
+  <view class="error" wx:elif="{{error}}">
+    <icon type="warn" size="64"></icon>
+    <text>{{error}}</text>
+    <button class="retry-btn" bindtap="initApp">重试</button>
+  </view>
+
+  <!-- 正常状态 -->
+  <block wx:else>
+    <!-- 顶部信息 -->
+    <view class="header-card">
+      <view class="location-row">
+        <text class="location-name">{{locationName.district}}</text>
+        <button class="switch-btn small" bindtap="openCityPicker">切换城市</button>
+      </view>
     </view>
-    
-    <!-- 授权提示 -->
-    <view class="auth-container" wx:if="{{!hasLocationAuth}}">
-      <view class="auth-tip">需要获取您的位置才能提供准确的天气信息</view>
-      <ant-button type="primary" onTap="requestLocationAuth">授权位置信息</ant-button>
+
+    <!-- 天气卡片列表 -->
+    <scroll-view class="weather-cards" scroll-x enable-flex>
+      <view class="weather-card {{index === 0 ? 'today' : ''}}" wx:for="{{weatherData}}" wx:key="date">
+        <view class="card-date">
+          <text class="date-text">{{item.date}}</text>
+          <text class="day-text">{{item.week}}</text>
+        </view>
+        <view class="card-weather">
+          <text class="weather-type">{{item.text_day}}</text>
+        </view>
+        <view class="card-temp">
+          <text class="temp-max">{{item.high}}°</text>
+          <text class="temp-min">{{item.low}}°</text>
+        </view>
+        <view class="card-wind">
+          <text class="wind-label">风向: {{item.wd_day}}</text>
+          <text class="wind-label">风力: {{item.wc_day}}</text>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 今日天气详情 -->
+    <view class="weather-detail" wx:if="{{todayWeather}}">
+      <view class="detail-header">
+        <text class="detail-title">今日天气详情</text>
+      </view>
+
+      <view class="detail-content">
+        <view class="detail-item">
+          <text class="item-label">温度</text>
+          <text class="item-value">{{todayWeather.temperature.min}}° ~ {{todayWeather.temperature.max}}°</text>
+        </view>
+
+        <view class="detail-item">
+          <text class="item-label">湿度</text>
+          <text class="item-value">{{todayWeather.humidity}}%</text>
+        </view>
+
+        <view class="detail-item">
+          <text class="item-label">风向</text>
+          <text class="item-value">{{todayWeather.windDirection}} {{todayWeather.windForce}}</text>
+        </view>
+
+        <view class="detail-item">
+          <text class="item-label">空气质量</text>
+          <text class="item-value">{{todayWeather.airQuality.level}} ({{todayWeather.airQuality.index}})</text>
+        </view>
+
+        <view class="detail-item">
+          <text class="item-label">日出日落</text>
+          <text class="item-value">{{todayWeather.sunrise}} / {{todayWeather.sunset}}</text>
+        </view>
+      </view>
+
+      <view class="weather-tips">
+        <text class="tips-title">生活建议</text>
+        <text class="tips-content">{{weatherTips}}</text>
+      </view>
     </view>
-    
-    <!-- 加载状态 -->
-    <view class="loading-container" wx:elif="{{loading}}">
-      <ant-icon type="loading" className="loading-icon" spin />
-      <view class="loading-text">正在获取天气数据...</view>
-    </view>
-    
-    <!-- 天气信息展示 -->
-    <view class="weather-content" wx:else>
-      <!-- 今日天气卡片 -->
-      <ant-card title="今日天气" className="today-card">
-        <view class="today-weather">
-          <view class="weather-icon-large">
-            <image src="{{weatherData[0].iconUrl}}" mode="aspectFit" />
+
+    <!-- 城市选择弹窗 -->
+    <view class="city-picker" wx:if="{{showCityPicker}}">
+      <view class="picker-mask" bindtap="closeCityPicker"></view>
+      <view class="picker-content">
+        <view class="picker-header">
+          <text>选择城市</text>
+          <view class="close-btn" bindtap="closeCityPicker">×</view>
+        </view>
+
+        <view class="picker-body">
+          <!-- 省份选择 -->
+          <view class="province-list">
+            <scroll-view scroll-y style="height: 100%;" scroll-into-view="province-{{selectedProvinceCode}}" scroll-with-animation>
+              <view wx:for="{{provinces}}" wx:key="code" 
+                    id="province-{{item.code}}"
+                    class="province-item {{selectedProvince === item.name ? 'active' : ''}}" 
+                    bindtap="selectProvince" 
+                    data-province="{{item.name}}"
+                    data-code="{{item.code}}">
+                {{item.name}}
+              </view>
+            </scroll-view>
           </view>
-          <view class="today-info">
-            <view class="weather-desc">{{weatherData[0].weather}}</view>
-            <view class="temp-range">{{weatherData[0].temp}}</view>
-            <view class="update-time">更新时间: {{updateTime}}</view>
+
+          <!-- 城市选择 -->
+          <view class="city-list">
+            <scroll-view scroll-y style="height: 100%;" scroll-into-view="city-{{selectedCityCode}}" scroll-with-animation>
+              <view wx:for="{{citiesOfProvince}}" wx:key="code" 
+                    id="city-{{item.code}}"
+                    class="city-item {{selectedCity === item.name ? 'active' : ''}}" 
+                    bindtap="selectCity" 
+                    data-city="{{item.name}}"
+                    data-code="{{item.code}}">
+                {{item.name}}
+              </view>
+            </scroll-view>
+          </view>
+
+          <!-- 区县选择 -->
+          <view class="district-list">
+            <scroll-view scroll-y style="height: 100%;" scroll-into-view="district-{{selectedDistrictCode}}" scroll-with-animation>
+              <view wx:for="{{districts}}" wx:key="code" 
+                    id="district-{{item.code}}"
+                    class="district-item {{selectedDistrict === item.name ? 'active' : ''}}" 
+                    bindtap="selectDistrict" 
+                    data-district="{{item.name}}"
+                    data-code="{{item.code}}">
+                {{item.name}}
+              </view>
+            </scroll-view>
           </view>
         </view>
-      </ant-card>
-      
-      <!-- 未来天气预报 -->
-      <view class="forecast-section">
-        <view class="forecast-title">未来6天天气预报</view>
-        <view class="forecast-list">
-          <view class="forecast-item" wx:for="{{weatherData}}" wx:key="date" wx:if="{{index > 0}}">
-            <view class="forecast-date">{{item.date}}</view>
-            <image class="forecast-icon" src="{{item.iconUrl}}" mode="aspectFit" />
-            <view class="forecast-weather">{{item.weather}}</view>
-            <view class="forecast-temp">{{item.temp}}</view>
-          </view>
+
+        <view class="picker-footer">
+          <button class="confirm-btn" bindtap="confirmCitySelection">确定</button>
         </view>
       </view>
     </view>
-  </ant-container>
+  </block>
 </view>

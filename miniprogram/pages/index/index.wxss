@@ -4,195 +4,487 @@ page {
   display: flex;
   flex-direction: column;
   background-color: #f5f7fa;
+  color: #333;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-.weather-container {
+.container {
+  padding: 20rpx;
+  min-height: 100vh;
+  background: #f5f6fa;
+}
+
+/* 顶部栏样式 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  background-color: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+}
+
+.header-card {
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.06);
+  padding: 32rpx 36rpx;
+  margin: 32rpx 24rpx 0 24rpx;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  align-items: flex-start;
+}
+
+.location-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20rpx;
+}
+
+.location-name {
+  font-size: 32rpx;
+  color: #333;
+  font-weight: 500;
+  max-width: 320rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.switch-btn {
+  background: #3498db;
+  color: #fff;
+  border: none;
+  border-radius: 32rpx;
+  font-size: 26rpx;
+  padding: 12rpx 32rpx;
+  margin-left: 24rpx;
+  transition: background 0.2s;
+}
+.switch-btn:active {
+  background: #217dbb;
+}
+
+.switch-btn.small {
+  font-size: 20rpx;
+  padding: 6rpx 18rpx;
+  border-radius: 999rpx;
+  min-width: 0;
+  height: auto;
+  line-height: 1.2;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.city-row {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+
+.city {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #333;
+}
+
+.city-select-btn {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 8rpx 16rpx;
+  background-color: #f5f5f5;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  color: #666;
+}
+
+.city-select-btn .arrow {
+  font-size: 20rpx;
+  color: #999;
+}
+
+.time {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.refresh {
+  padding: 20rpx;
+  color: #3498db;
+}
+
+/* 天气卡片列表 */
+.weather-cards {
+  display: flex;
+  padding: 30rpx 0;
+  white-space: nowrap;
+  height: 360rpx;
+  margin-top: 20rpx;
+  justify-content: flex-start;
   box-sizing: border-box;
 }
 
-/* 城市选择栏 */
-.city-bar {
-  display: flex;
-  align-items: center;
-  padding: 24rpx 30rpx;
-  background: linear-gradient(to right, #4a90e2, #63b8ff);
-  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.1);
-  margin-bottom: 20rpx;
-}
-
-.city-name {
-  font-size: 36rpx;
-  font-weight: 500;
-  color: #ffffff;
-  margin-right: 10rpx;
-}
-
-.location-icon {
-  font-size: 28rpx;
-  color: #ffffff;
-}
-
-/* 授权提示 */
-.auth-container {
-  display: flex;
+/* 天气卡片样式 */
+.weather-card {
+  display: inline-flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 60rpx 40rpx;
-  margin: 30rpx;
-  background-color: #ffffff;
+  width: 200rpx;
+  height: 320rpx;
+  margin-right: 20rpx;
+  padding: 20rpx;
+  background-color: #fff;
   border-radius: 16rpx;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
 }
 
-.auth-tip {
-  font-size: 28rpx;
-  color: #666666;
-  margin-bottom: 40rpx;
-  text-align: center;
+/* 第一个卡片的左边距 */
+.weather-card:first-child {
+  margin-left: 30rpx;
 }
 
-/* 加载状态 */
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 300rpx;
-}
-
-.loading-icon {
-  font-size: 48rpx;
-  color: #4a90e2;
-  margin-bottom: 20rpx;
-}
-
-.loading-text {
-  font-size: 28rpx;
-  color: #999999;
-}
-
-/* 天气内容区域 */
-.weather-content {
-  flex: 1;
-  padding: 0 30rpx 30rpx;
-}
-
-/* 今日天气卡片 */
-.today-card {
-  margin-bottom: 40rpx;
-  border-radius: 16rpx;
-  overflow: hidden;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
-}
-
-.today-weather {
-  display: flex;
-  align-items: center;
-  padding: 30rpx 20rpx;
-}
-
-.weather-icon-large {
-  width: 140rpx;
-  height: 140rpx;
+/* 最后一个卡片的右边距 */
+.weather-card:last-child {
   margin-right: 30rpx;
 }
 
-.weather-icon-large image {
-  width: 100%;
-  height: 100%;
+/* 今天的天气卡片样式 */
+.weather-card.today {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: #fff;
+  transform: scale(1.05);
 }
 
-.today-info {
-  flex: 1;
-}
-
-.weather-desc {
-  font-size: 36rpx;
-  font-weight: 500;
-  color: #333333;
-  margin-bottom: 10rpx;
-}
-
-.temp-range {
-  font-size: 48rpx;
-  font-weight: 600;
-  color: #4a90e2;
-  margin-bottom: 10rpx;
-}
-
-.update-time {
-  font-size: 24rpx;
-  color: #999999;
-}
-
-/* 预报部分 */
-.forecast-section {
-  background-color: #ffffff;
-  border-radius: 16rpx;
-  padding: 30rpx;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
-}
-
-.forecast-title {
-  font-size: 32rpx;
-  font-weight: 500;
-  color: #333333;
-  margin-bottom: 30rpx;
-  text-align: center;
-}
-
-/* 预报网格样式 - 已弃用，使用下方列表视图样式 */
-/* 保留此注释作为历史记录 */
-
-/* 预报列表样式 - 列表视图 */
-.forecast-list {
+.card-date {
   display: flex;
   flex-direction: column;
-  background-color: #ffffff;
-  border-radius: 16rpx;
-  overflow: hidden;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
-}
-
-.forecast-item {
-  display: flex;
   align-items: center;
-  padding: 30rpx 20rpx;
-  border-bottom: 1rpx solid #f0f0f0;
+  margin-bottom: 10rpx;
 }
 
-.forecast-item:last-child {
-  border-bottom: none;
+.date-text {
+  font-size: 24rpx;
+  margin-bottom: 4rpx;
 }
 
-.forecast-date {
-  width: 100rpx;
+.day-text {
   font-size: 28rpx;
-  color: #333333;
-}
-
-.forecast-icon {
-  width: 60rpx;
-  height: 60rpx;
-  margin: 0 30rpx;
-}
-
-.forecast-weather {
-  flex: 1;
-  font-size: 28rpx;
-  color: #666666;
-}
-
-.forecast-temp {
-  font-size: 28rpx;
-  color: #333333;
   font-weight: 500;
 }
 
+.today-tag {
+  font-size: 22rpx;
+  background-color: rgba(255, 255, 255, 0.3);
+  padding: 2rpx 10rpx;
+  border-radius: 10rpx;
+  margin-top: 6rpx;
+}
+
+.card-weather {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10rpx 0;
+}
+
+.weather-type {
+  font-size: 26rpx;
+  margin-bottom: 6rpx;
+}
+
+.weather-icon {
+  width: 80rpx;
+  height: 80rpx;
+  margin: 10rpx 0;
+  /* 这里可以根据不同天气类型设置不同的背景图 */
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+}
+
+.card-temp {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.temp-max {
+  font-size: 32rpx;
+  font-weight: 500;
+}
+
+.temp-min {
+  font-size: 26rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+
+.today .temp-min {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.card-current {
+  margin-top: 10rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.current-temp {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+
+.current-label {
+  font-size: 22rpx;
+  margin-top: 4rpx;
+  opacity: 0.8;
+}
+
+/* 天气详情 */
+.weather-detail {
+  margin: 30rpx;
+  background: white;
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.detail-header {
+  margin-bottom: 20rpx;
+}
+
+.detail-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.detail-content {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+  margin-bottom: 30rpx;
+}
+
+.detail-item {
+  display: flex;
+  flex-direction: column;
+  padding: 20rpx;
+  background: #f8f9fa;
+  border-radius: 10rpx;
+}
+
+.item-label {
+  font-size: 24rpx;
+  color: #7f8c8d;
+  margin-bottom: 10rpx;
+}
+
+.item-value {
+  font-size: 28rpx;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+.weather-tips {
+  background: #f8f9fa;
+  border-radius: 10rpx;
+  padding: 20rpx;
+}
+
+.tips-title {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 10rpx;
+  display: block;
+}
+
+.tips-content {
+  font-size: 26rpx;
+  color: #34495e;
+  line-height: 1.6;
+}
+
+/* 加载状态 */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.loading-icon {
+  width: 80rpx;
+  height: 80rpx;
+  border: 6rpx solid #e0e0e0;
+  border-top-color: #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 错误状态 */
+.error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: #e74c3c;
+}
+
+.error text {
+  margin: 20rpx 0;
+  font-size: 28rpx;
+}
+
+.retry-btn {
+  margin-top: 30rpx;
+  padding: 20rpx 40rpx;
+  background: #3498db;
+  color: white;
+  border-radius: 10rpx;
+  font-size: 28rpx;
+}
+
+/* 城市选择按钮 */
+.city-select {
+  position: fixed;
+  bottom: 40rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #3498db;
+  color: white;
+  padding: 20rpx 60rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  box-shadow: 0 4rpx 20rpx rgba(52, 152, 219, 0.3);
+}
+
+/* 城市选择器 */
+.city-picker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.picker-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.picker-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border-radius: 24rpx 24rpx 0 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 70%;
+}
+
+.picker-header {
+  padding: 30rpx;
+  text-align: center;
+  font-size: 32rpx;
+  font-weight: 500;
+  border-bottom: 1rpx solid #eee;
+  position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  right: 30rpx;
+  top: 30rpx;
+  font-size: 40rpx;
+  color: #999;
+}
+
+.picker-body {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.province-list,
+.city-list,
+.district-list {
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
+.province-list {
+  background-color: #f5f7fa;
+  border-right: 1rpx solid #eee;
+}
+
+.province-item,
+.city-item,
+.district-item {
+  padding: 30rpx 20rpx;
+  font-size: 28rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.province-item.active,
+.city-item.active,
+.district-item.active {
+  color: #4facfe;
+  background-color: #fff;
+  font-weight: 500;
+}
+
+.city-list {
+  border-right: 1rpx solid #eee;
+}
+
+.district-list {
+  background-color: #f5f7fa;
+}
+
+.picker-footer {
+  padding: 20rpx 30rpx;
+  border-top: 1rpx solid #eee;
+}
+
+.confirm-btn {
+  background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  color: #fff;
+  border: none;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+  padding: 20rpx 0;
+}
 
 .nickname-wrapper {
   display: flex;
@@ -210,4 +502,68 @@ page {
 
 .nickname-input {
   flex: 1;
+}
+
+/* 天气列表 */
+.weather-list {
+  background: white;
+  border-radius: 20rpx;
+  padding: 20rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+
+.weather-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx 20rpx;
+  border-bottom: 2rpx solid #f5f6fa;
+}
+
+.weather-item:last-child {
+  border-bottom: none;
+}
+
+.weather-item.today {
+  background: #f8f9fa;
+  border-radius: 10rpx;
+}
+
+.date {
+  display: flex;
+  flex-direction: column;
+}
+
+.day {
+  font-size: 32rpx;
+  color: #2c3e50;
+  font-weight: bold;
+}
+
+.date-num {
+  font-size: 24rpx;
+  color: #7f8c8d;
+  margin-top: 10rpx;
+}
+
+.weather {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.type {
+  font-size: 28rpx;
+  color: #2c3e50;
+}
+
+.temp {
+  font-size: 24rpx;
+  color: #e74c3c;
+  margin-top: 10rpx;
+}
+
+.air {
+  font-size: 24rpx;
+  color: #7f8c8d;
 }
